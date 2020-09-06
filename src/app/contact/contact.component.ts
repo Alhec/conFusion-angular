@@ -61,10 +61,10 @@ export class ContactComponent implements OnInit {
       message: ''
     });
 
-    this.feedbackForm.valueChanges
-      .subscribe(data => this.onValueChanged(data));
+  this.feedbackForm.valueChanges
+    .subscribe(data => this.onValueChanged(data));
 
-    this.onValueChanged(); // (re)set validation messages now
+  this.onValueChanged(); // (re)set validation messages now
   }
 
   onValueChanged(data?: any) {

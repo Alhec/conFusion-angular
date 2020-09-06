@@ -57,7 +57,7 @@
                     <mat-error *ngIf="formErrors.telnum">{{formErrors.telnum}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="half-width">
-                    <input matInput formControlName="email" placeholder="Email" type="email" required>
+                    <input matInput formControlName="email" placeholder="Email" type="email" email required>
                     <mat-error *ngIf="formErrors.email">{{formErrors.email}}</mat-error>
                 </mat-form-field>
             </p>
@@ -79,6 +79,6 @@
                 </mat-form-field>
             </p>
             <button type="submit" mat-button class="background-primary text-floral-white" [disabled]="feedbackForm.invalid">Submit</button>
-            </form>
-        </div>
+        </form>
+    </div>
 </div>
