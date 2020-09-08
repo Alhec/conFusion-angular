@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Feedback, ContactType } from '../shared/feedback';
-import { flyInOut } from '../animations/app.animation';
-
+import { flyInOut, expand } from '../animations/app.animation';
+import { FeedbackService } from '../services/feedback.service'
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-contact',
@@ -13,7 +14,8 @@ import { flyInOut } from '../animations/app.animation';
     'style': 'display: block;'
   },
   animations: [
-    flyInOut()
+    flyInOut(),
+    expand()
   ]
 })
 export class ContactComponent implements OnInit {
@@ -23,6 +25,9 @@ export class ContactComponent implements OnInit {
   feedbackForm: FormGroup;
   feedback: Feedback;
   contactType = ContactType;
+  errMess: string;
+  status:string;
+
   formErrors = {
     'firstname': '',
     'lastname': '',
@@ -51,8 +56,9 @@ export class ContactComponent implements OnInit {
     },
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private feedbackService:FeedbackService) {
     this.createForm();
+    this.status='empty'
   }
 
   ngOnInit(): void {
@@ -96,9 +102,22 @@ export class ContactComponent implements OnInit {
   }
 
   onSubmit() {
+    this.status="sending"
     this.feedback = this.feedbackForm.value;
-    console.log(this.feedback);
-    // this.feedbackForm.reset();
+    this.feedbackService.postDish(this.feedback)
+    .subscribe(feedback =>{
+      console.log(feedback)
+      this.feedback=feedback;
+      this.status='resume';
+      setTimeout(
+        ()=> {this.status='empty'; this.feedback=null},5000);
+    },
+    errmess => {this.errMess = <any>errmess;
+      this.feedback=null;
+      this.status='resume';
+      setTimeout(
+        ()=> {this.status='empty';this.errMess=null},5000);})
+
     this.feedbackForm.reset({
       firstname: '',
       lastname: '',
